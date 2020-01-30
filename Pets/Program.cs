@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Pets
 {   public class Animals
@@ -102,6 +103,7 @@ namespace Pets
 
     class Program
     {
+
         static void Main(string[] args)
         {
             Animals Dog = new Animals("Doofy", new DateTime(2018, 7, 20), Animals.Sex.male);
@@ -115,7 +117,7 @@ namespace Pets
             Giraffe giraffe = new Giraffe("Melman", new DateTime(2017, 7, 20), Animals.Sex.male);
             giraffe.SayHello();
             Console.WriteLine("-------------------------------------------");
-            var listOfAnimals = new List<Animals>()
+            List<Animals> listOfAnimals = new List<Animals>()
             {
                 new Animals("Doorry", new DateTime(2018, 7, 21), Animals.Sex.Female),
                 new Animals("Cappa", new DateTime(2018, 8, 30), Animals.Sex.male),
@@ -127,9 +129,19 @@ namespace Pets
                 new Giraffe("Harry", new DateTime(2008, 3, 09), Animals.Sex.male),
                 new Elephant("Bender", new DateTime(2013, 12, 18), Animals.Sex.male),
             };
-
+            
+            
             listOfAnimals.SayHelloList();
-           
+            //This version for LinQ 
+            Console.WriteLine("-------Старше 2 лет------------------------------------");
+            var old2 = from e in listOfAnimals where e.Age > 2 select e;
+            
+            foreach(Animals i in old2)
+            {
+                i.SayHello();
+            }
+
+
         }
     }
 }
