@@ -35,6 +35,7 @@ namespace Pets
         }
         public string vid = " ";
         public Animals(string n, DateTime b, Sex My) { Name = n; Birthday = b; MySex = My;}
+        public Animals() { }
         public virtual void SayHello()
         {
             
@@ -49,7 +50,7 @@ namespace Pets
         public Zebra(string n, DateTime b, Sex My) : base(n, b, My)
         {
         }
-
+        public Zebra(){ }
         public override void SayHello()
         {
             vid = " Зебра ";
@@ -63,7 +64,7 @@ namespace Pets
         public Elephant(string n, DateTime b, Sex My) : base(n, b, My)
         {
         }
-
+        public Elephant() { }
         public override void SayHello()
         {
             vid = " Слон ";
@@ -78,8 +79,8 @@ namespace Pets
         public Giraffe(string n, DateTime b, Sex My) : base(n, b, My)
         {
         }
-
-         public override void SayHello()
+        public Giraffe() { }
+        public override void SayHello()
          {
              
         vid = " Жираф ";
@@ -128,19 +129,44 @@ namespace Pets
                 new Giraffe("Kate", new DateTime(2010, 1, 24), Animals.Sex.Female),
                 new Giraffe("Harry", new DateTime(2008, 3, 09), Animals.Sex.male),
                 new Elephant("Bender", new DateTime(2013, 12, 18), Animals.Sex.male),
+                new Elephant("Bender", new DateTime(2019, 12, 18), Animals.Sex.male),
             };
-            
-            
+
+
             listOfAnimals.SayHelloList();
             //This version for LinQ 
             Console.WriteLine("-------Старше 2 лет------------------------------------");
             var old2 = from e in listOfAnimals where e.Age > 2 select e;
-            
-            foreach(Animals i in old2)
+
+            foreach (Animals i in old2)
+            {
+                i.SayHello();
+            }
+            Console.WriteLine(listOfAnimals[2].GetType());
+            var vseZebra = from e in listOfAnimals where e.GetType() == new Zebra().GetType() select e;
+
+            foreach (Animals i in vseZebra)
             {
                 i.SayHello();
             }
 
+            int oldAnimals = listOfAnimals.Select(i => i.Age).Sum();
+            Console.WriteLine($" Возраст всех животных {oldAnimals}");
+            // int oldAnimals = (from e in listOfAnimals select e.Age).Sum(); // Ещё один вариант лямда выражения
+
+            var NameAnimals = listOfAnimals.Select(i => i.Name).Distinct();
+            
+            foreach (String i in NameAnimals)
+            {
+                Console.WriteLine(i);
+            }
+            var vseElephantB = from e in listOfAnimals where e.GetType() == new Elephant().GetType() select e.Birthday;
+            Console.WriteLine("Дни рождения слонов");
+            foreach (var i in vseElephantB)
+            {
+                Console.WriteLine(i);
+            }
+            
 
         }
     }
