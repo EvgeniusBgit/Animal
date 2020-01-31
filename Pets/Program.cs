@@ -107,17 +107,17 @@ namespace Pets
 
         static void Main(string[] args)
         {
-            Animals Dog = new Animals("Doofy", new DateTime(2018, 7, 20), Animals.Sex.male);
-            Dog.SayHello();
-            Dog++;
-            Dog.SayHello();
-            Zebra zebra = new Zebra("Anny", new DateTime(2014, 7, 20), Animals.Sex.Female);
-            zebra.SayHello();
-            Elephant slon = new Elephant("Krasty", new DateTime(2012, 7, 20), Animals.Sex.male);
-            slon.SayHello();
-            Giraffe giraffe = new Giraffe("Melman", new DateTime(2017, 7, 20), Animals.Sex.male);
-            giraffe.SayHello();
-            Console.WriteLine("-------------------------------------------");
+            //Animals Dog = new Animals("Doofy", new DateTime(2018, 7, 20), Animals.Sex.male);
+            //Dog.SayHello();
+            //Dog++;
+            //Dog.SayHello();
+            //Zebra zebra = new Zebra("Anny", new DateTime(2014, 7, 20), Animals.Sex.Female);
+            //zebra.SayHello();
+            //Elephant slon = new Elephant("Krasty", new DateTime(2012, 7, 20), Animals.Sex.male);
+            //slon.SayHello();
+            //Giraffe giraffe = new Giraffe("Melman", new DateTime(2017, 7, 20), Animals.Sex.male);
+            //giraffe.SayHello();
+            //Console.WriteLine("-------------------------------------------");
             List<Animals> listOfAnimals = new List<Animals>()
             {
                 new Animals("Doorry", new DateTime(2018, 7, 21), Animals.Sex.Female),
@@ -150,24 +150,42 @@ namespace Pets
                 i.SayHello();
             }
 
-            int oldAnimals = listOfAnimals.Select(i => i.Age).Sum();
-            Console.WriteLine($" Возраст всех животных {oldAnimals}");
+          
+
+            int AgeAnimals = listOfAnimals.Select(i => i.Age).Sum();
+            Console.WriteLine($" Возраст всех животных {AgeAnimals}");
             // int oldAnimals = (from e in listOfAnimals select e.Age).Sum(); // Ещё один вариант лямда выражения
 
+            Console.WriteLine($" Уникальные имена животных");
             var NameAnimals = listOfAnimals.Select(i => i.Name).Distinct();
             
             foreach (String i in NameAnimals)
             {
                 Console.WriteLine(i);
             }
-            var vseElephantB = from e in listOfAnimals where e.GetType() == new Elephant().GetType() select e.Birthday;
+            
             Console.WriteLine("Дни рождения слонов");
+            var vseElephantB = from e in listOfAnimals where e.GetType() == new Elephant().GetType() select e.Birthday;
             foreach (var i in vseElephantB)
             {
                 Console.WriteLine(i);
             }
-            
+            Console.WriteLine("Средний возраст по типу животных");
+            var averageAge = from e in listOfAnimals
+                             group e by e.GetType() into newgroup
+                             select ($"Средний возраст {newgroup.Key.Name} = {(from e in listOfAnimals where e.GetType() == newgroup.Key select e.Age).Average()} лет");
+             foreach (var i in averageAge)
+            {
+                Console.WriteLine(i);
+            }
+            Console.WriteLine("Самые старые животные");
+            var OldAnimalForMeat = (from e in listOfAnimals orderby e.Age descending select e).Take(3);
+            foreach (var i in OldAnimalForMeat)
+            {
+                i.SayHello();
+            }
 
+            Console.ReadKey();
         }
     }
 }
