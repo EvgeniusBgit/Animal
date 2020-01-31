@@ -142,7 +142,7 @@ namespace Pets
             {
                 i.SayHello();
             }
-            Console.WriteLine(listOfAnimals[2].GetType());
+            Console.WriteLine("Зебры:");
             var vseZebra = from e in listOfAnimals where e.GetType() == new Zebra().GetType() select e;
 
             foreach (Animals i in vseZebra)
