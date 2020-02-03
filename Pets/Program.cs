@@ -154,7 +154,7 @@ namespace Pets
 
             int AgeAnimals = listOfAnimals.Select(i => i.Age).Sum();
             Console.WriteLine($" Возраст всех животных {AgeAnimals}");
-            // int oldAnimals = (from e in listOfAnimals select e.Age).Sum(); // Ещё один вариант лямда выражения
+            // int oldAnimals = (from e in listOfAnimals select e.Age).Sum(); // Ещё один вариант запроса
 
             Console.WriteLine($" Уникальные имена животных");
             var NameAnimals = listOfAnimals.Select(i => i.Name).Distinct();
