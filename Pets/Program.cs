@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Pets
-{   public class Animals
+{
+    public class Animals
     {
         public string Name;
         public enum Sex
@@ -34,12 +35,12 @@ namespace Pets
             }
         }
         public string vid = " ";
-        public Animals(string n, DateTime b, Sex My) { Name = n; Birthday = b; MySex = My;}
+        public Animals(string n, DateTime b, Sex My) { Name = n; Birthday = b; MySex = My; }
         public Animals() { }
         public virtual void SayHello()
         {
-            
-            string say = String.Format("Привет, я животное{0}по имени {1}, мой возраст {2} лет, мой пол {3}",vid, Name, Age, MySex);
+
+            string say = String.Format("Привет, я животное{0}по имени {1}, мой возраст {2} лет, мой пол {3}", vid, Name, Age, MySex);
             //Console.WriteLine($"Привет, я животное {Name}, мой возраст {Age} лет, мой пол {MySex}");
             Console.WriteLine(say);
         }
@@ -50,7 +51,7 @@ namespace Pets
         public Zebra(string n, DateTime b, Sex My) : base(n, b, My)
         {
         }
-        public Zebra(){ }
+        public Zebra() { }
         public override void SayHello()
         {
             vid = " Зебра ";
@@ -70,7 +71,7 @@ namespace Pets
             vid = " Слон ";
             base.SayHello();
         }
-        
+
 
     }
 
@@ -81,29 +82,42 @@ namespace Pets
         }
         public Giraffe() { }
         public override void SayHello()
-         {
-             
-        vid = " Жираф ";
+        {
+
+            vid = " Жираф ";
             base.SayHello();
         }
-       
 
-    
+
+
     }
     public static class SayHelloAnimals
     {
         public static void SayHelloList(this List<Animals> l)
         {
-            foreach(Animals i in l)
+            foreach (Animals i in l)
             {
                 i.SayHello();
             }
         }
 
     }
+    
 
     class Program
     {
+        public enum TypeOfAnimals
+        {
+            Zebra,
+            Elephant,
+            Dog,
+            Giraffe
+        };
+        static bool Typebool(List<Animals> ts, TypeOfAnimals sc)
+        {
+            var booll = ts.Any(e => e.GetType().Name == sc.ToString());
+            return booll;
+        }
 
         static void Main(string[] args)
         {
@@ -137,12 +151,14 @@ namespace Pets
             //This version for LinQ 
             Console.WriteLine("-------Старше 2 лет------------------------------------");
             var old2 = from e in listOfAnimals where e.Age > 2 select e;
-
+            //var old2 = listOfAnimals.Where(e=> e.Age > 2).Select(e=> e);// метод расширения
             foreach (Animals i in old2)
             {
                 i.SayHello();
             }
-            Console.WriteLine("Зебры:");
+            
+            Console.WriteLine("Все Зебры");
+            // var vseZebra = listOfAnimals.Where(e=> e.GetType() == new Zebra().GetType()).Select(e=>e);// метод расширения
             var vseZebra = from e in listOfAnimals where e.GetType() == new Zebra().GetType() select e;
 
             foreach (Animals i in vseZebra)
@@ -150,22 +166,24 @@ namespace Pets
                 i.SayHello();
             }
 
-          
 
-            int AgeAnimals = listOfAnimals.Select(i => i.Age).Sum();
+
+            //int AgeAnimals = listOfAnimals.Select(i => i.Age).Sum(); // метод расширения
+            int AgeAnimals = (from e in listOfAnimals select e.Age).Sum();
             Console.WriteLine($" Возраст всех животных {AgeAnimals}");
-            // int oldAnimals = (from e in listOfAnimals select e.Age).Sum(); // Ещё один вариант запроса
+
 
             Console.WriteLine($" Уникальные имена животных");
-            var NameAnimals = listOfAnimals.Select(i => i.Name).Distinct();
-            
+            //var NameAnimals = listOfAnimals.Select(i => i.Name).Distinct(); // метод расширения
+            var NameAnimals = (from i in listOfAnimals select i.Name).Distinct();
             foreach (String i in NameAnimals)
             {
                 Console.WriteLine(i);
             }
-            
+
             Console.WriteLine("Дни рождения слонов");
             var vseElephantB = from e in listOfAnimals where e.GetType() == new Elephant().GetType() select e.Birthday;
+            //var vseElephantB = listOfAnimals.Where(e=>e.GetType() == new Elephant().GetType()).Select(e=>e.Birthday); // метод расширения
             foreach (var i in vseElephantB)
             {
                 Console.WriteLine(i);
@@ -174,18 +192,28 @@ namespace Pets
             var averageAge = from e in listOfAnimals
                              group e by e.GetType() into newgroup
                              select ($"Средний возраст {newgroup.Key.Name} = {(from e in listOfAnimals where e.GetType() == newgroup.Key select e.Age).Average()} лет");
-             foreach (var i in averageAge)
+
+            //var averageAge = listOfAnimals.GroupBy(e => e.GetType()).Select(newgroup => ($"Средний возраст {newgroup.Key.Name} = {listOfAnimals.Where(e => e.GetType() == newgroup.Key).Select(e => e.Age).Average()} лет"));
+            // метод расширения
+            foreach (var i in averageAge)
             {
                 Console.WriteLine(i);
             }
             Console.WriteLine("Самые старые животные");
+            //var OldAnimalForMeat = listOfAnimals.OrderByDescending(e=>e.Age).Select(e=> e).Take(3);// метод расширения
             var OldAnimalForMeat = (from e in listOfAnimals orderby e.Age descending select e).Take(3);
+
             foreach (var i in OldAnimalForMeat)
             {
                 i.SayHello();
             }
 
+            Console.WriteLine(Typebool(listOfAnimals, TypeOfAnimals.Dog));
+
+
+
             Console.ReadKey();
+
         }
     }
 }
